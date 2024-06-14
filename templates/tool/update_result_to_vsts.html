@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+{%extends "base.html" %}
+{% load static %}
+<html>
+
+    <head>
+        <title>db_setup</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <!-- Bootstrap -->
+        <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+        <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+        <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'bootstrap/css/bootstrap-responsive.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'vendors/easypiechart/jquery.easy-pie-chart.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'assets/styles.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'vendors/kingstar/kingstar.css' %}" rel="stylesheet" media="screen">
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <script src="{% static 'vendors/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
+        <style>
+             .background {
+                display: block;
+                width: 100%;
+                height: 100%;
+                opacity: 0.4;
+                filter: alpha(opacity=40);
+                background:white;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 2000;
+                background-color:#666666;
+            }
+             #log {
+                font-family: 'Arial', sans-serif; 
+                font-size: 14px;
+                color: #333; 
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+            }
+        </style>
+    </head>
+
+    <body>
+
+        {% block title %}
+            <div id="background" class="background" style="display: none; "></div>
+            <div id="progressBar" class="progressBar" style="display: none; ">Running, please wait...</div>
+            <div class="modal fade" id="loadingModal" backdrop="static" keyboard="false">
+                　　<div style="width: 200px;height:20px; z-index: 20000; position: absolute; text-align: center; left: 50%; top: 50%;margin-left:-100px;margin-top:-10px">
+                　　　　<div class="progress progress-striped active" style="margin-bottom: 0;">
+                　　　　　　<div class="progress-bar" style="width: 100%;"></div>
+                　　　　</div>
+                　　　　<h5 id="loadText">loading...</h5>
+                　　</div>
+            </div>
+                <!--/span-->
+                <div class="span10" id="content">
+                      <!-- morris stacked chart -->
+
+
+                    <div class="row-fluid">
+                        <!-- block -->
+                        <div class="block">
+                            <div class="navbar navbar-inner block-header">
+                                <div class="muted pull-left">Upload Result To VSTS</div>
+                            </div>
+                            <div class="block-content collapse in">
+                                <div class="span12">
+
+                                    {% comment %} <div class="form-group" id="div_pg_host">
+                                            <label for="form-control" class="col-sm-2 control-label">PG Host</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" id="pg_host">
+                                                    {% for item in pg_host %}
+                                                                <option value ="{{ item }}">{{ item }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                    </div> {% endcomment %}
+                                    <div class="form-group">
+                                        <div class="control-group">
+                                          <label class="control-label" for="focusedInput">Plan ID</label>
+                                          <div class="controls">
+                                            <input class="input-xlarge focused" id="plan_id" type="text" value={{ plan_id }}>                
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="control-group">
+                                          <label class="control-label" for="focusedInput">Suite ID</label>
+                                          <div class="controls">
+                                            <input class="input-xlarge focused" id="suite_id" type="text" value={{ suite_id }}>
+                                          </div>
+                                        </div>
+                                    </div>
+
+                                    <div  class="form-group">
+                                        <input class="input-xlarge focused" type="file" name="file" id="file_upload">
+                                        <input class="btn btn-primary" type="button" value="Upload" onclick="FileUpload()">
+                                        <form action="">
+                                            <a href="{% url 'file_down' %}">Download</a> template CVS
+                                        
+                                        </form>
+
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button id='run' class="btn btn-primary" onclick="run()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Run&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                        <div class="control-group" style="padding-top:20px">
+                                            <div class="controls" id="log">
+  {#                                            <textarea   type="text"  style="width: auto;height: auto;height: 10px"></textarea>#}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                   <div class="form-group" style="width: auto;height: auto">
+                                        
+                                   </div>
+
+                                   <div class="form-group">
+                                     <div class="control-group">
+                                            
+                                            <b style="color:#FF0000">Notes: </b>
+                                            </br>1.This tool can only update result("passed" or "failed"),not include other fileds.
+                                            </br>2.The CSV file should include columns "ID" or "TC_Id" and "Result".
+                                            </br>3.You can add/update "PERSONAL_ACCESS_TOKEN", "PLAN_ID" and "SUITE_ID" for customized configuration in "Settings/My Parameter" page.
+                                     </div>
+                                   </div>
+
+                                    <script>
+                                        function FileUpload() {
+                                            var form_data = new FormData();
+                                            var file_info =$('#file_upload')[0].files[0];
+                                            form_data.append('file',file_info);
+
+                                            $.ajax({
+                                                url:'/upload_ajax/',
+                                                type:'POST',
+                                                data: form_data,
+                                                processData: false,  
+                                                contentType: false, 
+                                                success: function(res) {
+                                
+                                                    alert(res)
+                                                }
+                                            });
+                                
+                                            }
+
+                                        function select_name() {
+                                            $.ajax({
+                                                type: "GET",
+                                                url: "/settings/vm_page/",
+                                                data: {
+                                                    "select_cluster_name":$("#select_cluster_name").val(),
+                                                    "action": 3
+                                                },
+                                                success: function (result) {
+                                                    {#alert(result)#}
+                                                    {#location.reload();#}
+                                                },
+                                            });
+                                        }
+                                        function select_db(){
+                                            if($('#db_type').val()=="postgres") {
+                                                $('#div_oracle_host').prop("hidden", true);
+                                                $('#div_pg_host').prop("hidden", false);
+                                            }
+                                            else
+                                                {
+                                                $('#div_oracle_host').prop("hidden", false);
+                                                $('#div_pg_host').prop("hidden", true);
+                                                }
+                                        }
+                                        function run() {
+                                        $('#run').attr('disabled',true);
+                                        $('#run').css('background-color','#CDC5BF')
+                                        var ajaxbg = $("#background, #progressBar");
+
+                                        ajaxbg.show();
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "/tool/update_result_to_vsts_new/",
+                                                data: {
+                                                    "plan_id":$("#plan_id").val(),
+                                                    "suite_id":$("#suite_id").val(),
+                                                    "file_upload":$("#file_upload").val(), 
+
+                                                },
+                                                success: function (result) {
+                                                    document.getElementById('log').innerHTML=result
+                                                    $('#run').attr('disabled',false);
+                                                    $('#run').css('background-color','#006dcc')
+                                                    ajaxbg.hide();
+
+                                                    {#alert(result)#}
+                                                    {#location.reload();#}
+                                                },
+                                            });
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /block -->
+                    </div>
+
+
+
+                     <!-- wizard -->
+
+
+                </div>
+        {% endblock %}
+    </body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load static %}
+<html class="no-js">
+    <head>
+        <title>Mtell test-change password</title>
+        <!-- Bootstrap -->
+        <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'bootstrap/css/bootstrap-responsive.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'vendors/easypiechart/jquery.easy-pie-chart.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'assets/styles.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'vendors/kingstar/kingstar.css' %}" rel="stylesheet" media="screen">
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <script src="{% static 'vendors/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
+        <style>
+
+        </style>
+    </head>
+
+    <body id="login">
+        <div class="container">
+
+          <form class="form-signin" action="/manage_chg_pwd/" method="POST">
+            <h2 class="form-signin-heading">Change password</h2>
+            {% if errors %}
+
+                {% for error in errors %}
+                <li style="margin-bottom: 5px">
+                    <p style="color: red;display: inline">Please check th error: {{error}}
+                    </p>
+                </li>
+                {% endfor %}
+
+            {% endif %}
+            <input type="text" class="input-block-level" name="username" value="{{ user_to_change }}" readonly>
+            <input type="password" class="input-block-level" name="new_password1" placeholder="New password">
+            <input type="password" class="input-block-level" name="new_password2" placeholder="Repeat password">
+
+
+            <div>
+                <button class="btn btn-large btn-primary" type="submit">Reset</button>
+                <a style="margin-left: 10px" href="/user_manage/"><u>Return to management page</u></a>
+            </div>
+
+
+          </form>
+
+        </div> <!-- /container -->
+        <script src="{% static 'vendors/jquery-1.9.1.min.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'vendors/easypiechart/jquery.easy-pie-chart.js' %}"></script>
+        <script src="{% static 'assets/scripts.js' %}"></script>
+        <script>
+        $(function() {
+            // Easy pie charts
+            $('.chart').easyPieChart({animate: 1000});
+        });
+        </script>
+
+    </body>
+</html>

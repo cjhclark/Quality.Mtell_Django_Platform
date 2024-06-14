@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load static %}
+<html class="no-js">
+    <head>
+        <title>Mtell Test Login</title>
+        <!-- Bootstrap -->
+        <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'bootstrap/css/bootstrap-responsive.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'vendors/easypiechart/jquery.easy-pie-chart.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'assets/styles.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'vendors/kingstar/kingstar.css' %}" rel="stylesheet" media="screen">
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <script src="{% static 'vendors/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
+        <style>
+            #login{
+                display:flex ;
+                justify-content: right;
+            }
+        </style>
+    </head>
+
+    <body id="login" style="padding: 0px 0px 0px 0px">
+        <div class="container" style="background-image: url({% static "images\login_bg1.jpg" %});background-repeat:no-repeat;margin: 0px 0px 0px 0px;width: auto;height: 900px">
+            <div style="margin: 268px 200px 0px 480px;height: 500px">
+                <form class="form-signin" action="/login/" method="POST" style="height: 302px;background: rgba(0, 0, 0, 0);padding: 17px 50px 16px 20px;margin: 0px 230px 0px 270px;border-style: none">
+                    <div style="height: 50px;margin-top: 20px;margin-bottom: 12px">
+                        {% if errors %}
+
+                            {% for error in errors %}
+                            <li style="margin-bottom: 5px">
+                                <p style="color: red;display: inline">Please check the error: {{error}}
+                                </p>
+                            </li>
+                            {% endfor %}
+
+                        {% endif %}
+                    </div>
+
+                    <input type="text" class="input-block-level" name="username" placeholder="User Name" style="margin-bottom: 28px;opacity: 1!important">
+                    <input type="password" class="input-block-level" name="password" placeholder="Password" style="margin-bottom: 90px">
+
+                    <div style="float: right;margin-right: 19px;width: auto">
+                        <button class="btn btn-primary" type="submit" style="padding: 4px 21px 6px 20px">Login</button>
+                        <a href="/register/" style="margin-left: 15px;color: #0e0e0e"><u>Register</u></a>
+
+                    </div>
+
+                </form>
+            </div>
+        </div> <!-- /container -->
+        <script src="{% static 'vendors/jquery-1.9.1.min.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'vendors/easypiechart/jquery.easy-pie-chart.js' %}"></script>
+        <script src="{% static 'assets/scripts.js' %}"></script>
+
+    </body>
+</html>

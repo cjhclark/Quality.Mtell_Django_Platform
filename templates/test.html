@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+    <head>
+        <title>主页</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <!-- Bootstrap -->
+        <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'bootstrap/css/bootstrap-responsive.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'assets/styles.css' %}" rel="stylesheet" media="screen">
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <script src="{% static 'vendors/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
+
+
+    </head>
+
+    <body>
+
+            <div style="overflow-x:scroll; overflow-y: scroll;width:500px;height:150px;" id="scrollid">
+                <table cellspacing="0" cellpadding="0" style="width:120%;margin-top:5px;">
+                  <tr class="freezeTr">
+                    <td class="freezeTd">姓名</td>
+                    <td class="bordercolor">年龄</td>
+                    <td class="bordercolor">班级</td>
+                    <td class="bordercolor">性别</td>
+                  </tr>
+                  <tr>
+                    <td class="freezeTd">张三</td>
+                    <td>12</td>
+                    <td>六一班</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td class="freezeTd">李四</td>
+                    <td>12</td>
+                    <td>六一班</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td class="freezeTd">王五</td>
+                    <td>12</td>
+                    <td>六一班</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td class="freezeTd">赵六</td>
+                    <td>12</td>
+                    <td>六二班</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td class="freezeTd">余七</td>
+                    <td>12</td>
+                    <td>六二班</td>
+                    <td>女</td>
+                  </tr>
+                </table>
+              </div>
+
+
+        <!--/.fluid-container-->
+        <link href="{% static 'vendors/datepicker.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'vendors/uniform.default.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'vendors/chosen.min.css' %}" rel="stylesheet" media="screen">
+
+        <link href="{% static 'vendors/wysiwyg/bootstrap-wysihtml5.css' %}" rel="stylesheet" media="screen">
+
+        <script src="{% static 'vendors/jquery-1.9.1.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'vendors/jquery.uniform.min.js' %}"></script>
+        <script src="{% static 'vendors/chosen.jquery.min.js' %}"></script>
+        <script src="{% static 'vendors/bootstrap-datepicker.js' %}"></script>
+
+        <script src="{% static 'vendors/wysiwyg/wysihtml5-0.3.0.js' %}"></script>
+        <script src="{% static 'vendors/wysiwyg/bootstrap-wysihtml5.js' %}"></script>
+
+        <script src="{% static 'vendors/wizard/jquery.bootstrap.wizard.min.js' %}"></script>
+
+
+        <script src="{% static 'assets/scripts.js' %}"></script>
+        <script>
+        $(function() {
+            $(".datepicker").datepicker();
+            $(".uniform_on").uniform();
+            $(".chzn-select").chosen();
+            $('.textarea').wysihtml5();
+
+            $('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
+                var $total = navigation.find('li').length;
+                var $current = index+1;
+                var $percent = ($current/$total) * 100;
+                $('#rootwizard').find('.bar').css({width:$percent+'%'});
+                // If it's the last tab then hide the last button and show the finish instead
+                if($current >= $total) {
+                    $('#rootwizard').find('.pager .next').hide();
+                    $('#rootwizard').find('.pager .finish').show();
+                    $('#rootwizard').find('.pager .finish').removeClass('disabled');
+                } else {
+                    $('#rootwizard').find('.pager .next').show();
+                    $('#rootwizard').find('.pager .finish').hide();
+                }
+            }});
+            $('#rootwizard .finish').click(function() {
+                alert('Finished!, Starting over!');
+                $('#rootwizard').find("a[href*='tab1']").trigger('click');
+            });
+        });
+        </script>
+        <script>
+        freezeTd();
+        function freezeTd()
+        {
+          $("#scrollid").scroll(function () {//给table外面的div滚动事件绑定一个函数
+            var left = $("#scrollid").scrollLeft();//获取横向滚动的距离
+            var up = $("#scrollid").scrollTop();//获取纵向滚动的距离
+            if(up>5){up = up - 5;}//防止纵向滚动时向上冒出
+            var trs = $("#scrollid table tr");
+            trs.each(function (i) {
+              if($(this).attr("class") == "freezeTr")
+              {
+                $(this).children(".freezeTd").css({
+                  "position": "relative",
+                  "top": up,
+                  "left": left,
+                  "background-color": "white",
+                  "z-index": "5"
+                });
+                $(this).children(".bordercolor").css({
+                  "position": "relative",
+                  "top": up,
+                  "left": "0px",
+                  "background-color": "white"
+                });
+              }
+              else
+              {
+                $(this).children(".freezeTd").css({
+                  "position": "relative",
+                  "top": "0px",
+                  "left": left,
+                  "background-color": "white"
+                });
+              }
+            });
+          });
+        }
+      </script>
+
+    </body>
+
+</html>

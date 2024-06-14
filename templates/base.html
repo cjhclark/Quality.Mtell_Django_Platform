@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+    <head>
+        <title>Mtell Automation</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <!-- Bootstrap -->
+        <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+        <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+        <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'bootstrap/css/bootstrap-responsive.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'vendors/easypiechart/jquery.easy-pie-chart.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'assets/styles.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'vendors/datepicker.css' %}" rel="stylesheet" media="screen">
+
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <script src="{% static 'vendors/jquery-1.9.1.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'vendors/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
+        <script src="{% static 'vendors/bootstrap-datepicker2.js' %}"></script>
+
+        <style>
+            .progressBar {
+                border: solid 2px #86A5AD;
+                background: white url({% static "images\loading.gif" %}) no-repeat 18px 35px;
+            }
+
+            .progressBar {
+                display: block;
+                width: 160px;
+                height: 58px;
+                top: 50%;
+                left: 50%;
+                margin-left: -74px;
+                margin-top: -14px;
+                padding: 10px 10px 10px 30px;
+                text-align: left;
+                line-height: 27px;
+                font-weight: bold;
+                position: fixed;
+                z-index: 2001;
+            }
+
+            .background {
+                display: block;
+                width: 100%;
+                height: 100%;
+                opacity: 0.4;
+                filter: alpha(opacity=40);
+                background:white;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 2000;
+                background-color:#666666;
+            }
+        </style>
+    </head>
+
+    <body>
+
+
+
+
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner" style="height: 55px">
+                <div class="container-fluid" style="height: 55px">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="/index/" style="background-image: url({% static "images\logo.png" %});height: 35px;width: 210px"></a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right" style="margin-top: 8px">
+                            <li class="dropdown">
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i>{{ user }}<i class="caret"></i>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="#">My</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a tabindex="-1" href="/logout">Logout</a>
+                                    </li>
+                                    {% if user_info.user_type %}
+                                        <li>
+                                            <a tabindex="-1" href="/user_manage/">management</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="nav" style="margin-top: 8px">
+                            <li class="dropdown">
+                                <a href="/index">Index</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="/configs" data-toggle="dropdown" class="dropdown-toggle">Settings<b class="caret"></b>
+
+                                </a>
+                                <ul class="dropdown-menu" id="menu1">
+                                    <li>
+                                        <a href="/settings/my_parameter">My Parameter</a>
+                                    </li>
+                                    <li>
+                                        <a href="/settings/public_parameter">Public Parameter</a>
+                                    </li>
+                                    
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Report<i class="caret"></i>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    
+                                    <li>
+                                        <a tabindex="-1" >Report3</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" >Report4</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" >Report5</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Tool<i class="caret"></i>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="/tool/update_result_to_vsts">Upload Test Result To VSTS</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" >test</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span2" id="sidebar">
+                    <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
+                        <li>
+                            <a href="/tool/update_result_to_vsts"><i class="icon-chevron-right"></i>Upload Test Result To VSTS</a>
+                        </li>
+                        <li>
+                            <a><i class="icon-chevron-right"></i>Test</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--/span-->
+                <div class="span10" id="content" style="width: 120%">
+
+                {% block title %}{% endblock %}
+
+
+
+
+                     <!-- wizard -->
+
+                </div>
+            </div>
+            <hr>
+            <footer>
+                <p style="text-align: center;font-weight: bolder">AspenTech</p>
+            </footer>
+        </div>
+        <!--/.fluid-container-->
+        <link href="{% static 'vendors/datepicker.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'vendors/uniform.default.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'vendors/chosen.min.css' %}" rel="stylesheet" media="screen">
+
+        <link href="{% static 'vendors/wysiwyg/bootstrap-wysihtml5.css' %}" rel="stylesheet" media="screen">
+
+{#        <script src="{% static 'vendors/jquery-1.9.1.js' %}"></script>#}
+{#                <script src="{% static 'vendors/jquery.js' %}"></script>#}
+{##}
+{#        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>#}
+{#        <script src="{% static 'vendors/jquery.uniform.min.js' %}"></script>#}
+{#        <script src="{% static 'vendors/chosen.jquery.min.js' %}"></script>#}
+{#        <script src="{% static 'vendors/bootstrap-datepicker.js' %}"></script>#}
+
+        <script src="{% static 'vendors/wysiwyg/wysihtml5-0.3.0.js' %}"></script>
+        <script src="{% static 'vendors/wysiwyg/bootstrap-wysihtml5.js' %}"></script>
+
+        <script src="{% static 'vendors/wizard/jquery.bootstrap.wizard.min.js' %}"></script>
+
+
+        <script src="{% static 'assets/scripts.js' %}"></script>
+{#        <script>#}
+{#        $(function() {#}
+{#            $(".datepicker").datepicker();#}
+{#            $(".uniform_on").uniform();#}
+{#            $(".chzn-select").chosen();#}
+{#            $('.textarea').wysihtml5();#}
+{##}
+{#            $('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {#}
+{#                var $total = navigation.find('li').length;#}
+{#                var $current = index+1;#}
+{#                var $percent = ($current/$total) * 100;#}
+{#                $('#rootwizard').find('.bar').css({width:$percent+'%'});#}
+{#                // If it's the last tab then hide the last button and show the finish instead#}
+{#                if($current >= $total) {#}
+{#                    $('#rootwizard').find('.pager .next').hide();#}
+{#                    $('#rootwizard').find('.pager .finish').show();#}
+{#                    $('#rootwizard').find('.pager .finish').removeClass('disabled');#}
+{#                } else {#}
+{#                    $('#rootwizard').find('.pager .next').show();#}
+{#                    $('#rootwizard').find('.pager .finish').hide();#}
+{#                }#}
+{#            }});#}
+{#            $('#rootwizard .finish').click(function() {#}
+{#                alert('Finished!, Starting over!');#}
+{#                $('#rootwizard').find("a[href*='tab1']").trigger('click');#}
+{#            });#}
+{#        });#}
+{#        </script>#}
+    </body>
+
+</html>
